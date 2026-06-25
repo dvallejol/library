@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Digital - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+    <header class="navbar">
+        <div class="logo">📚 Sistema Biblioteca</div>
+        <div class="user-info">
+            <span id="welcomeMessage">Hola, Usuario</span>
+            <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        
+        <div id="panelEstadisticas" class="stats-grid" style="display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;">
+            
+            <div class="stat-card" style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid #007bff;">
+                <div style="font-size: 11px; font-weight: bold; color: #007bff; text-transform: uppercase; letter-spacing: 0.5px;">Total Libros en Catálogo</div>
+                <div id="cardTotalLibros" style="font-size: 28px; font-weight: bold; color: #333; margin-top: 5px;">0</div>
+            </div>
+
+            <div id="wrapperCardPendientes" class="stat-card" style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid #ffc107;">
+                <div id="lblCardPendientes" style="font-size: 11px; font-weight: bold; color: #ffc107; text-transform: uppercase; letter-spacing: 0.5px;">Solicitudes por Aprobar</div>
+                <div id="cardSolicitudesPendientes" style="font-size: 28px; font-weight: bold; color: #333; margin-top: 5px;">0</div>
+            </div>
+
+            <div class="stat-card" style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid #28a745;">
+                <div id="lblCardActivos" style="font-size: 11px; font-weight: bold; color: #28a745; text-transform: uppercase; letter-spacing: 0.5px;">Préstamos Activos</div>
+                <div id="cardPrestamosActivos" style="font-size: 28px; font-weight: bold; color: #333; margin-top: 5px;">0</div>
+            </div>
+
+            <div class="stat-card" style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid #dc3545;">
+                <div style="font-size: 11px; font-weight: bold; color: #dc3545; text-transform: uppercase; letter-spacing: 0.5px;">Títulos Agotados</div>
+                <div id="cardLibrosAgotados" style="font-size: 28px; font-weight: bold; color: #333; margin-top: 5px;">0</div>
+            </div>
+
+        </div>
+
+        <section class="card-panel">
+            <h3>Gestionar Catálogo de Libros</h3>
+            <div class="search-container" style="margin-bottom: 20px; max-width: 400px;">
+                <label for="txtBuscar" style="font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px; color: #555;">🔍 Buscar libro:</label>
+                <input type="text" id="txtBuscar" placeholder="Escribe el título o autor para filtrar..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+            <p class="panel-desc">Registra nuevos títulos o actualiza el catálogo de la biblioteca.</p>
+            
+            <form id="libroForm" class="form-inline">
+                <input type="hidden" id="idLibroEditar"> 
+                <div class="form-group">
+                    <input type="text" id="libTitulo" placeholder="Título del libro" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="libAutor" placeholder="Autor" required>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="libAnio" placeholder="Año" required>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="libStock" placeholder="Unidades" min="1" required style="width: 100px;">
+                </div>
+                <button type="submit" id="btnGuardarLibro" class="btn-action">Agregar Libro</button>
+            </form>
+
+            <div class="table-container">
+                <table id="tablaLibros">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Autor</th>
+                            <th>Año</th>
+                            <th>Stock Disponible</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card-panel">
+            <h3>Registrar Control de Préstamos</h3>
+            <p class="panel-desc">Asigna la salida de un libro disponible a un lector registrado.</p>
+            
+            <form id="prestamoForm" class="form-inline">
+                <div class="form-group">
+                    <label>Usuario Operador:</label>
+                    <input type="text" id="presNombreUsuario" readonly style="background: #e9ecef; font-weight: bold; color: #495057;">
+                </div>
+                <div class="form-group">
+                    <label>Seleccionar Libro Disponible:</label>
+                    <select id="presSelectLibro" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="">-- Seleccione un libro --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fecha Devolución:</label>
+                    <input type="date" id="presFechaDevolucion" required>
+                </div>
+                <button type="submit" class="btn-action btn-loan">Asignar Préstamo</button>
+            </form>
+        </section>
+
+        <section id="seccionSolicitudesPendientes" class="card-panel" style="display: none; border: 1px solid #ffc107; background: #fffdf6;">
+            <h3 style="color: #b58105;">📥 Solicitudes de Préstamo por Aprobar</h3>
+            <p class="panel-desc">Peticiones entrantes enviadas por los lectores que requieren verificación antes de entregar el libro.</p>
+            
+            <div class="table-container">
+                <table id="tablaSolicitudesPendientes">
+                    <thead>
+                        <tr style="background: #fff3cd;">
+                            <th>ID Solicitud</th>
+                            <th>Usuario / Lector</th>
+                            <th>Libro Solicitado</th>
+                            <th>Fecha Solicitud</th>
+                            <th style="text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card-panel" style="margin-top: 30px;">
+            <h3>📋 Historial y Auditoría de Préstamos</h3>
+            <p class="panel-desc">Monitoreo completo de qué lector solicitó cada título y el estado de su entrega.</p>
+            
+            <div class="table-container">
+                <div id="contenedorFiltrosFechas" style="display: flex; gap: 15px; align-items: flex-end; margin-bottom: 15px; background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #dee2e6;">
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="font-size: 12px; font-weight: bold; color: #555;">Fecha Inicio (Salida):</label>
+                        <input type="date" id="filtroFechaInicio" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="font-size: 12px; font-weight: bold; color: #555;">Fecha Fin:</label>
+                        <input type="date" id="filtroFechaFin" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+                    <button id="btnAplicarFiltroFecha" style="padding: 7px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">Filtrar</button>
+                    <button id="btnLimpiarFiltroFecha" style="padding: 7px 15px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">Limpiar</button>
+                </div>
+            
+                <table id="tablaHistorialPrestamos">
+                    <thead>
+                        <tr style="background: #f4f6f9;">
+                            <th>ID</th>
+                            <th>Lector / Operador</th>
+                            <th>Libro Prestado</th>
+                            <th>Fecha Salida</th>
+                            <th>Fecha Máxima Entrega</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

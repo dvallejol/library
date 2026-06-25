@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Digital - Autenticación</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box" id="loginBox">
+            <h2>Iniciar Sesión</h2>
+            <p class="subtitle">Bienvenido de vuelta al sistema de gestión</p>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="loginCorreo">Correo Electrónico</label>
+                    <input type="email" id="loginCorreo" placeholder="ejemplo@correo.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Contraseña</label>
+                    <!-- Contenedor dinámico para que el ojo flote correctamente -->
+                    <div style="position: relative; display: flex; align-items: center; width: 100%;">
+                        <input type="password" id="loginPassword" placeholder="••••••••" required style="width: 100%; padding-right: 40px;">
+                        <!-- Ícono del ojo con ID específico para el login -->
+                        <span id="toggleLoginPassword" style="position: absolute; right: 12px; cursor: pointer; user-select: none; font-size: 18px; color: #777;">👁️</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Ingresar</button>
+            </form>
+            <p class="switch-text">¿No tienes cuenta? <a href="#" id="toRegister">Regístrate aquí</a></p>
+        </div>
+
+        <div class="form-box hidden" id="registerBox">
+            <h2>Crear Cuenta</h2>
+            <p class="subtitle">Regístrate para acceder al catálogo de libros</p>
+            <form id="registerForm">
+                <div class="input-group">
+                    <label for="regNombre">Nombre Completo</label>
+                    <input type="text" id="regNombre" placeholder="Tu nombre" required>
+                </div>
+                <div class="input-group">
+                    <label for="regCorreo">Correo Electrónico</label>
+                    <input type="email" id="regCorreo" placeholder="ejemplo@correo.com" required>
+                </div>
+              <div class="input-group">
+                <label for="regPassword">Contraseña</label>
+                <div style="position: relative; display: flex; align-items: center; width: 100%;">
+                    <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required style="width: 100%; padding-right: 40px;">
+                    <span id="toggleRegPassword" style="position: absolute; right: 12px; cursor: pointer; user-select: none; font-size: 18px; color: #777;">👁️</span>
+                </div>
+              </div>
+                <button type="submit" class="btn">Registrarse</button>
+            </form>
+            <p class="switch-text">¿Ya tienes cuenta? <a href="#" id="toLogin">Inicia sesión</a></p>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    
+
+</body>
+</html>
