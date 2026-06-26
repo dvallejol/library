@@ -25,9 +25,9 @@ app.use('/api/libros', libroRoutes);
 app.use('/api/prestamos', prestamoRoutes);
 
 // Ruta de prueba
-app.get('/', (req, res) => {
-    res.send('Servidor de la Biblioteca funcionando correctamente 🚀');
-});
+//app.get('/', (req, res) => {
+    //res.send('Servidor de la Biblioteca funcionando correctamente 🚀');
+//});
 
 // Encender el servidor
 app.listen(PORT, () => {
