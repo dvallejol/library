@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api';
+const API_URL = '/api';
 
 let listaPrestamosGlobal = []; // Guarda el historial completo
 let paginaActualPrestamos = 1;  // Página donde inicia

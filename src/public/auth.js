@@ -37,7 +37,8 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     }
 
     try {
-        const response = await fetch('http://localhost:8080/api/usuarios/registrar', {
+        // 🚀 CORREGIDO: Usando ruta relativa para Vercel
+        const response = await fetch('/api/usuarios/registrar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nombre, correo, password })
@@ -81,7 +82,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const password = document.getElementById('loginPassword').value;
 
     try {
-        const response = await fetch('http://localhost:8080/api/usuarios/login', {
+        // 🚀 CORREGIDO: Usando ruta relativa para Vercel
+        const response = await fetch('/api/usuarios/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ correo, password })
