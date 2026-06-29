@@ -1,33 +1,33 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path'); // 1. 🚀 IMPORTANTE: Agrega esta línea arriba con tus otros require
 require('dotenv').config();
-const db = require('./config/db');
 
-const usuarioRoutes = require('./presentation/UsuarioController');
-const libroRoutes = require('./presentation/LibroController');
-const prestamoRoutes = require('./presentation/PrestamoController');
+// 1. IMPORTAR LAS RUTAS DE LOS MÓDULOS (Capa de Presentación)
+const empleadoRoutes = require('./routes/empleadoRoutes');
 
+// Inicializar la aplicación Express
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middlewares Globales
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Permite recibir formatos JSON en el cuerpo de las peticiones (req.body)
 
-// 2. 🚀 CORREGIDO: Ruta absoluta para la carpeta public en Vercel
-app.use(express.static(path.join(__dirname, 'public')));
+// 2. VINCULAR LAS RUTAS A LA API
+// Ahora cualquier petición a http://localhost:3000/api/empleados irá a tu controlador de empleados
+app.use('/api/empleados', empleadoRoutes);
 
-// --- REGISTRO DE RUTAS API ---
-app.use('/api/usuarios', usuarioRoutes);
-app.use('/api/libros', libroRoutes);
-app.use('/api/prestamos', prestamoRoutes);
-
-// 3. 🚀 AGREGADO: Regla comodín para servir el index.html en la raíz
+// Ruta de prueba inicial para verificar que el servidor responda
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.json({
+        mensaje: "Bienvenido al Sistema de Novedades de Obra API v1.0",
+        estado: "Online"
+    });
 });
 
-// Encender el servidor
+// Arrancar el servidor
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor backend corriendo con éxito en http://localhost:${PORT}`);
 });
+
+module.exports = app;
