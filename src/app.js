@@ -1,33 +1,42 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+const path = require('path');
 
-// 1. IMPORTAR LAS RUTAS DE LOS MÓDULOS (Capa de Presentación)
-const empleadoRoutes = require('./routes/empleadoRoutes');
+// 🚀 CAMBIO 1: Solo cargamos dotenv si NO estamos en Vercel (entorno local)
+if (!process.env.VERCEL) {
+    require('dotenv').config();
+}
 
-// Inicializar la aplicación Express
+const usuarioRoutes = require('./presentation/UsuarioController');
+const libroRoutes = require('./presentation/LibroController');
+const prestamoRoutes = require('./presentation/PrestamoController');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares Globales
 app.use(cors());
-app.use(express.json()); // Permite recibir formatos JSON en el cuerpo de las peticiones (req.body)
+app.use(express.json());
 
-// 2. VINCULAR LAS RUTAS A LA API
-// Ahora cualquier petición a http://localhost:3000/api/empleados irá a tu controlador de empleados
-app.use('/api/empleados', empleadoRoutes);
+// Servir archivos estáticos con ruta absoluta
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta de prueba inicial para verificar que el servidor responda
+// --- REGISTRO DE RUTAS API ---
+app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/libros', libroRoutes);
+app.use('/api/prestamos', prestamoRoutes);
+
+// Servir el index.html de forma segura en la raíz
 app.get('/', (req, res) => {
-    res.json({
-        mensaje: "Bienvenido al Sistema de Novedades de Obra API v1.0",
-        estado: "Online"
-    });
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Arrancar el servidor
+// 🚀 CAMBIO 2: Middleware global para atrapar errores y evitar que Node.js se muera (status 1)
+app.use((err, req, res, next) => {
+    console.error("❌ Error en el servidor:", err.message);
+    res.status(500).json({ error: 'Error interno en el servidor de la biblioteca' });
+});
+
+// Encender el servidor
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor backend corriendo con éxito en http://localhost:${PORT}`);
+    console.log(`🚀 Servidor backend corriendo en el puerto ${PORT}`);
 });
-
-module.exports = app;
